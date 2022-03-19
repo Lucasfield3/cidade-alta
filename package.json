@@ -8,11 +8,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-scroll-area": "^0.1.4",
+    "@types/styled-components": "^5.1.24",
+    "axios": "^0.26.1",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^8.5.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-hook-form": "^7.22.1",
+    "react-router-dom": "^6.2.2",
     "styled-components": "^5.3.3"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/jsonwebtoken": "^8.5.8",
     "@types/react": "^17.0.33",
     "@types/react-dom": "^17.0.10",
     "@vitejs/plugin-react": "^1.0.7",
