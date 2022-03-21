@@ -5,7 +5,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/Auth';
 import { api } from '../../services/api';
-import { Form, LoginPage } from './styled';
+import { Button, PageDefault } from '../../style/global';
+import { Form } from './styled';
 
 export interface User {
     id:number,
@@ -44,14 +45,14 @@ export const Login = () => {
 
     
     return (
-        <LoginPage>
+        <PageDefault>
             <h1>Login</h1>
-            <Form colorSenha={errors.senha?.type === 'required' ? '#ec3838' : ''} colorName={errors.nome?.type === 'required' ? '#ec3838' : ''} onSubmit={handleSubmit(onSubmit)}>
+            <Form colorSenha={errors.senha?.type === 'required' ? '#ce2424' : ''} colorName={errors.nome?.type === 'required' ? '#ce2424' : ''} onSubmit={handleSubmit(onSubmit)}>
                 <input placeholder={errorMsgNome} {...register("nome", {required:true})} type="text" />
-                <p style={{color:'#ec3838', fontSize:'1.6rem'}}>{errorMsg}</p>
+                <p style={{color:'#ce2424', fontSize:'1.6rem'}}>{errorMsg}</p>
                 <input  placeholder={errorMsgPassword} {...register("senha", {required:true})} type="text" />
-                <button type='submit'>Entrar</button>
+                <Button type='submit'>Entrar</Button>
             </Form>
-        </LoginPage>
+        </PageDefault>
     );
 };

@@ -1,17 +1,11 @@
 import styled from 'styled-components'
 
-export const LoginPage = styled.div`
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center; 
-    height:100vh;
-    margin: 0 auto;
-`
 interface Props {
     colorName:string;
     colorSenha:string
 }
+
+
 
 export const Form = styled.form<Props>`
     display:flex;
@@ -21,8 +15,12 @@ export const Form = styled.form<Props>`
     font-size: 2rem;
 
     input{
-        margin-bottom: 1rem;
-
+        height: 4.6rem;
+        width: 26rem;
+        border-radius: 5px;
+        padding: 0 1rem;
+        margin-bottom: 2.2rem;
+        border: none;
     }
 
     &:first-child input{

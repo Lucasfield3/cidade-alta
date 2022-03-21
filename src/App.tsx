@@ -6,8 +6,10 @@ import {
   Navigate,
 } from 'react-router-dom'
 import { AuthContext, AuthProvider, DEFAULT_CONTEXT_DATA } from './context/Auth'
-import { Login } from './pages/Login'
+import { CodesProvider } from './context/Codes'
+import { Login, User } from './pages/Login'
 import { PenalCode } from './pages/PenalCode'
+import { api } from './services/api'
 
 function App() {
   interface PrivateProps{
@@ -16,18 +18,20 @@ function App() {
 
   const Private = ({children}:PrivateProps)=>{
     const { authenticated, currentUser, loading } = useContext(AuthContext)
+    
+
     console.log(authenticated)
 
       if(loading){
         return <h1>Loading...</h1>
       }
 
-      if(currentUser !== DEFAULT_CONTEXT_DATA){
+      if(authenticated){
         return children
       }
 
 
-      if(currentUser === DEFAULT_CONTEXT_DATA){
+      if(!authenticated){
         return <Navigate to='/'/>
       }
   
@@ -39,10 +43,12 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          <Route element={<Login/>}  path=''></Route>
-          <Route element={<Private><PenalCode/></Private>}  path='/penal-code/id=:id'></Route>
-        </Routes>
+        <CodesProvider>
+          <Routes>
+            <Route element={<Login/>}  path=''></Route>
+            <Route element={<Private><PenalCode/></Private>}  path='/penal-code/:id'></Route>
+          </Routes>
+        </CodesProvider>
       </AuthProvider>
     </Router>
   )
