@@ -18,13 +18,14 @@ export const PageDefault = styled.div`
     display:flex;
     flex-direction:column;
     align-items:center;
+    justify-content: center;
     height:100vh;
 
     header{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
         width: 100%;
-        padding-top: 3rem;
+
     }
 
     h1{
