@@ -8,14 +8,24 @@ import { Button, PageDefault } from "../../style/global";
 import { User } from "../Login";
 import { AddButton, AreaAddButton, Title } from "./style";
 import  plus from '../../images/plus.svg'
+import { useNavigate } from "react-router-dom";
 
 
 export const PenalCode = () => {
 
     const { logOut, currentUser } = useContext(AuthContext)
-    const { getCodes, codes } = useContext(CodesContext)
+    const {  codes, getCodes } = useContext(CodesContext)
+
+    const navigate = useNavigate()
   
     const [ toggle, setToggle ] = useState(false)
+
+    useEffect(()=>{
+      getCodes()
+    },[])
+
+    console.log(codes);
+    
 
     return (
       <>
@@ -26,10 +36,10 @@ export const PenalCode = () => {
             <Button height='3rem' width='5rem' borderRadius='17px' style={{justifySelf:'flex-end', marginRight:'2.5rem'}} onClick={logOut}>Sair</Button>
          </header>
             <FilterArea/>
-            {codes.length > 0 ? <ScrollAreaDefault/> : <h1>Loading...</h1>}
+            <ScrollAreaDefault/>
             <AreaAddButton>
               <Title style={{transition:'all .2s ease-in-out'}} itsHovering={toggle}>Adicionar codigo penal</Title>
-              <AddButton onMouseLeave={()=> setToggle(false)} onMouseEnter={()=> setToggle(true)}>
+              <AddButton onClick={()=> navigate('/penal-code/new-code')} onMouseLeave={()=> setToggle(false)} onMouseEnter={()=> setToggle(true)}>
                 <img src={plus} alt="adicionar codigo penal" />
               </AddButton>
             </AreaAddButton>

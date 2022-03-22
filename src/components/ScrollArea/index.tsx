@@ -11,7 +11,7 @@ type ScrollAreaProps = {
 
 export const ScrollAreaDefault = ({toggle}: ScrollAreaProps) => {
 
-    const { getCodes, codes } = useContext(CodesContext)
+    const {  codes, getOnePenalCode } = useContext(CodesContext)
    
     const arrayFilteredStatus = codes.filter((codes)=> codes.status === 1)
     
@@ -27,17 +27,17 @@ export const ScrollAreaDefault = ({toggle}: ScrollAreaProps) => {
         <ScrollArea>
         
             <input placeholder="pesquise aqui" onChange={(e)=> setSearchedText(e.target.value)} value={searchedText} type="text" />
-            {codes.length > 0 && arrayFiltered.map((codes, index) => {
+            {codes.length > 0 ? arrayFiltered.map((code, index) => {
                 return (
                     <>
-                    <div>
-                        <p title={codes.nome} key={index} >
-                            {codes.nome}
+                    <div key={index + 1}>
+                        <p onClick={()=> getOnePenalCode(code.id)} title={code.nome} key={index} >
+                            {code.nome}
                         </p>
                     </div>
                     </>
                 )
-            })}
+            }) : <h1>Loading...</h1>}
             </ScrollArea>
           
       </>

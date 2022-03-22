@@ -7,8 +7,10 @@ import {
 } from 'react-router-dom'
 import { AuthContext, AuthProvider, DEFAULT_CONTEXT_DATA } from './context/Auth'
 import { CodesProvider } from './context/Codes'
+import { CreatePenalCode } from './pages/CreatePenalCode'
 import { Login, User } from './pages/Login'
 import { PenalCode } from './pages/PenalCode'
+import { ViewPenalCode } from './pages/ViewPenalCode'
 import { api } from './services/api'
 
 function App() {
@@ -46,7 +48,9 @@ function App() {
         <CodesProvider>
           <Routes>
             <Route element={<Login/>}  path=''></Route>
-            <Route element={<Private><PenalCode/></Private>}  path='/penal-code/:id'></Route>
+            <Route element={<Private><PenalCode/></Private>}  path='/penal-code'></Route>
+            <Route element={<ViewPenalCode/>} path='/penal-code/:id'></Route>
+            <Route element={<CreatePenalCode/>} path='/penal-code/new-code'></Route>
           </Routes>
         </CodesProvider>
       </AuthProvider>

@@ -13,6 +13,13 @@ export default createGlobalStyle`
 //     display:flex;
 
 // `
+interface ButtonProps{
+    color?:string;
+    background?:string;
+    width?:string;
+    height?:string;
+    borderRadius?:string;
+}
 
 export const PageDefault = styled.div`
     display:flex;
@@ -34,13 +41,7 @@ export const PageDefault = styled.div`
         font-weight: 500;
     }
 `
-interface ButtonProps{
-    color?:string;
-    background?:string;
-    width?:string;
-    height?:string;
-    borderRadius?:string;
-}
+
 
 export const Button = styled.button<ButtonProps>`
     cursor: pointer;
