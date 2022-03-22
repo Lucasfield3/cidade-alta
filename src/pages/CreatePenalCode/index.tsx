@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { CodesContext, PenalCode } from "../../context/Codes";
 import { Container } from "./style";
 
@@ -10,11 +11,14 @@ export const CreatePenalCode = (props: Props) => {
 
     const { createPenalCode } = useContext(CodesContext)
 
-    const { register, handleSubmit, formState:{errors} } = useForm()
+    const { register, handleSubmit, formState:{errors}, getValues } = useForm()
+    const navigate = useNavigate()
 
     const onSubmit = async(data:PenalCode)=>{
-        await createPenalCode()
+        await createPenalCode(data)
         console.log(data);
+        console.log(typeof(getValues('multa')));
+        setTimeout(()=>navigate('/penal-code'), 200)
         
     }
 
@@ -27,7 +31,7 @@ export const CreatePenalCode = (props: Props) => {
                 <input type="number" placeholder="multa" {...register('multa', {required:true})} />
                 <input type="number" placeholder="tempoPrisao" {...register('tempoPrisao', {required:true})} />
                 <input type="number" placeholder="status" {...register('status', {required:true})} />
-                <button type='submit' onClick={()=> createPenalCode()}>Criar</button>
+                <button type='submit'>Criar</button>
 
             </form>
         </Container>

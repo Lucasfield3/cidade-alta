@@ -17,7 +17,7 @@ type CodesContextData = {
     codes:PenalCode[],
     selectedCode:PenalCode;
     getOnePenalCode:(id:number)=>void;
-    createPenalCode:()=>Promise<PenalCode | any>;
+    createPenalCode:(data:PenalCode)=>Promise<PenalCode | any>;
     getCodes:()=>Promise<PenalCode[] | any>;
     deletePenalCode:(id:number)=>Promise<PenalCode | any>
 }
@@ -50,24 +50,32 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
     }
 
     const getOnePenalCode = async (id:number)=> {
+          // let filteredCode:null | PenalCode
+          // await fetch(`https://my-json-server.typicode.com/cidadealta/exercise/codigopenal`)
+          // .then((res)=>{
+          // if(!res.ok) throw Error('data missing')
+          // return res.json()
+          // })
+          // .then((data:PenalCode[])=>{
+          //      data.filter((code)=>{
+          //           if(code.id === id){
+          //                filteredCode = code
+          //           }
+          //      })
+          //      setSelectedCode(filteredCode)
+          //      navigate(`/penal-code/${id}`)
+          // }).catch((err)=> console.error(err))
           let filteredCode:null | PenalCode
-          await fetch(`https://my-json-server.typicode.com/cidadealta/exercise/codigopenal`)
-          .then((res)=>{
-          if(!res.ok) throw Error('data missing')
-          return res.json()
-          })
-          .then((data:PenalCode[])=>{
-               data.filter((code)=>{
-                    if(code.id === id){
-                         filteredCode = code
-                    }
-               })
+          codes.filter((code)=>{
+               if(code.id === id){
+                    filteredCode = code
+               }
                setSelectedCode(filteredCode)
                navigate(`/penal-code/${id}`)
-          }).catch((err)=> console.error(err))
+          })
      }
 
-     const createPenalCode = async()=>{
+     const createPenalCode = async(data:PenalCode)=>{
           await fetch(`https://my-json-server.typicode.com/cidadealta/exercise/codigopenal`, {
                method:'POST',
                headers: { 
@@ -75,19 +83,20 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
                     'Accept': 'application/json',
                },
                body:JSON.stringify({
-                   nome:'novo codigo',
-                   descricao:'descrição do codigo',
+                   nome:data.nome,
+                   descricao:data.descricao,
                    dataCriacao:new Date,
-                   multa:100,
-                   tempoPrisao:30,
-                   status:1,
+                   multa:data.multa,
+                   tempoPrisao:data.tempoPrisao,
+                   status:data.status,
                })
           }).then((res)=>{
                if(!res.ok) throw Error('data missing')
                return res.json()
           })
-          .then(async (data:PenalCode)=>{
-               console.log(data)
+          .then((data)=>{
+               console.log()
+               setCodes([...codes, data])
                
           }).catch((err)=> console.error(err))
      }
@@ -111,9 +120,9 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
           })
      }
 
-//     useEffect(()=>{
-//           getCodes()
-//      },[])
+    useEffect(()=>{
+          getCodes()
+     },[])
       
 
      return(

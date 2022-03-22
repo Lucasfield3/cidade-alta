@@ -28,6 +28,9 @@ export const ViewPenalCode = (props: Props) => {
         return day+"/"+month+"/"+year
         
      }
+
+     console.log(selectedCode.multa.toString().length);
+     
      
     return (
         <ContainerView>
@@ -43,7 +46,7 @@ export const ViewPenalCode = (props: Props) => {
                         <p><strong>Data: </strong>{formatDate(selectedCode.dataCriacao)}</p>
                     </div>
                     <p><strong>Descrição: </strong>{selectedCode.descricao}</p>
-                    <p><strong>Multa: </strong>{`R$${selectedCode.multa.toFixed(2)}`}</p>
+                    <p><strong>Multa: </strong>{`R$${parseFloat(selectedCode.multa.toString()).toFixed(2)}`}</p>
                     <p><strong>Tempo de prisão: </strong>{selectedCode.tempoPrisao}</p>
                     <p><strong>Status: </strong>{selectedCode.status === 1 ? 'Ativo' : 'Inativo'}</p>
                 </main> : <h1>Loading...</h1>}

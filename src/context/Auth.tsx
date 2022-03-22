@@ -76,7 +76,7 @@ export const AuthProvider = ({children}: AuthProviderProps) =>{
                 if(user.nome === data.nome && user.senha === data.senha){
                     setCurrentUser(user)
                     localStorage.setItem('id', String(user.id))
-                    navigate(`/penal-code`)
+                    setTimeout(()=>navigate(`/penal-code`), 200)
                     setLoading(false)
                     return currentUser
                 }

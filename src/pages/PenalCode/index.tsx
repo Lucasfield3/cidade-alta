@@ -20,10 +20,6 @@ export const PenalCode = () => {
   
     const [ toggle, setToggle ] = useState(false)
 
-    useEffect(()=>{
-      getCodes()
-    },[])
-
     console.log(codes);
     
 

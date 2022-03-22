@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/Auth';
+import { CodesContext } from '../../context/Codes';
 import { api } from '../../services/api';
 import { Button, PageDefault } from '../../style/global';
 import { Form } from './styled';
@@ -24,6 +25,7 @@ export const Login = () => {
     const [errorMsg, setErrorMsg] = useState('')
     const { register, handleSubmit, formState:{errors} } = useForm()
     const { login, authenticated } = useContext(AuthContext)
+    const { getCodes} = useContext(CodesContext)
 
     const errorMsgNome = errors.nome?.type === 'required' ? 'Nome inválido' : 'digite seu nome'
     const errorMsgPassword = errors.senha?.type === 'required' ? 'Senha inválida' : 'digite sua senha'
