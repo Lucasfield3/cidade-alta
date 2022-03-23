@@ -29,13 +29,12 @@ export const ViewPenalCode = (props: Props) => {
         
      }
 
-     console.log(selectedCode.multa.toString().length);
      
      
     return (
         <ContainerView>
                 <header>
-                    <button onClick={()=> navigate('/penal-code')}><img src={arrow} alt="voltar" /></button>
+                    <button onClick={()=> navigate('/user/codigos-penais')}><img src={arrow} alt="voltar" /></button>
                     <h1>Código Penal</h1>
                     <span></span>
                 </header>
@@ -48,7 +47,7 @@ export const ViewPenalCode = (props: Props) => {
                     <p><strong>Descrição: </strong>{selectedCode.descricao}</p>
                     <p><strong>Multa: </strong>{`R$${parseFloat(selectedCode.multa.toString()).toFixed(2)}`}</p>
                     <p><strong>Tempo de prisão: </strong>{selectedCode.tempoPrisao}</p>
-                    <p><strong>Status: </strong>{selectedCode.status === 1 ? 'Ativo' : 'Inativo'}</p>
+                    <p><strong>Status: </strong>{selectedCode.status.id === 1 ? 'Ativo' : 'Inativo'}</p>
                 </main> : <h1>Loading...</h1>}
         </ContainerView>
     );

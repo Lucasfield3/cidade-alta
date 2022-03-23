@@ -2,6 +2,11 @@ import { createContext, useContext, ReactNode, useState, useEffect } from 'react
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../services/api'
 
+export interface Status{
+     id:number;
+     descricao:"Ativo" | "Inativo"
+}
+
 export interface PenalCode {
     id:number;
     nome:string;
@@ -9,17 +14,18 @@ export interface PenalCode {
     dataCriacao:Date;
     multa:number;
     tempoPrisao:number;
-    status:number;
+    status:Status;
 }
 
 
 type CodesContextData = {
     codes:PenalCode[],
     selectedCode:PenalCode;
-    getOnePenalCode:(id:number)=>void;
+    getOnePenalCode:(id:number)=>Promise<PenalCode | any>;
     createPenalCode:(data:PenalCode)=>Promise<PenalCode | any>;
     getCodes:()=>Promise<PenalCode[] | any>;
-    deletePenalCode:(id:number)=>Promise<PenalCode | any>
+    deletePenalCode:(id:number)=>Promise<PenalCode | any>;
+    editPenalCode:(data:PenalCode, id:string)=>Promise<PenalCode | any>
 }
 
 type CodesProviderProps = {
@@ -38,9 +44,9 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
     
 
     const getCodes = async()=>{
-         await fetch(`https://my-json-server.typicode.com/cidadealta/exercise/codigopenal`)
+         await fetch(`http://localhost:3004/codigopenal`)
         .then((res)=>{
-          //  if(!res.ok) throw Error('data missing')
+          if(!res.ok) throw Error(res.statusText)
            return res.json()
         })
         .then((data:PenalCode[])=>{
@@ -50,33 +56,20 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
     }
 
     const getOnePenalCode = async (id:number)=> {
-          // let filteredCode:null | PenalCode
-          // await fetch(`https://my-json-server.typicode.com/cidadealta/exercise/codigopenal`)
-          // .then((res)=>{
-          // if(!res.ok) throw Error('data missing')
-          // return res.json()
-          // })
-          // .then((data:PenalCode[])=>{
-          //      data.filter((code)=>{
-          //           if(code.id === id){
-          //                filteredCode = code
-          //           }
-          //      })
-          //      setSelectedCode(filteredCode)
-          //      navigate(`/penal-code/${id}`)
-          // }).catch((err)=> console.error(err))
-          let filteredCode:null | PenalCode
-          codes.filter((code)=>{
-               if(code.id === id){
-                    filteredCode = code
-               }
-               setSelectedCode(filteredCode)
-               navigate(`/penal-code/${id}`)
+          await fetch(`http://localhost:3004/codigopenal/${id}`)
+          .then((res)=>{
+          if(!res.ok) throw Error(res.statusText)
+          return res.json()
           })
+          .then((data:PenalCode)=>{
+               console.log(data);
+               
+               setSelectedCode(prevState => {return {...prevState, ...data}})
+          }).catch((err)=> console.error(err))
      }
 
      const createPenalCode = async(data:PenalCode)=>{
-          await fetch(`https://my-json-server.typicode.com/cidadealta/exercise/codigopenal`, {
+          await fetch(`http://localhost:3004/codigopenal`, {
                method:'POST',
                headers: { 
                     'Content-Type': 'application/json' ,
@@ -91,33 +84,57 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
                    status:data.status,
                })
           }).then((res)=>{
-               if(!res.ok) throw Error('data missing')
+               if(!res.ok) throw Error(res.statusText)
+               console.log(res.body);
+               
                return res.json()
           })
-          .then((data)=>{
-               console.log()
-               setCodes([...codes, data])
-               
+          .then(async ()=>{
+               await getCodes()
           }).catch((err)=> console.error(err))
      }
 
      const deletePenalCode = async(id:number) =>{
 
-          await fetch(`https://my-json-server.typicode.com/cidadealta/exercise/codigopenal`, {
+          await fetch(`http://localhost:3004/codigopenal/${id}`, {
                method:'DELETE',
                headers: { 'Content-Type': 'application/json' },
-               body:JSON.stringify({
-                   id
-               })
           }).then((res)=>{
-               if(!res.ok) throw Error('data missing')
+               if(!res.ok) throw Error(res.statusText)
                return res.json()
           })
-          .then(async (data:PenalCode)=>{
-               console.log(data);
-               const deletedArray = codes.filter((code) => code.id !== data.id)
-               setCodes(deletedArray)
+          .then(async ()=>{
+               await getCodes()
           })
+     }
+
+     const editPenalCode = async(data:PenalCode, id:string)=>{
+          await fetch(`http://localhost:3004/codigopenal/${id}`, {
+               method:'PUT',
+               headers: { 
+                    'Content-Type': 'application/json' ,
+                    'Accept': 'application/json',
+               },
+               body:JSON.stringify({
+                   nome:data.nome,
+                   descricao:data.descricao,
+                   dataCriacao:new Date,
+                   multa:data.multa,
+                   tempoPrisao:data.tempoPrisao,
+                   status:data.status,
+               })
+          }).then((res)=>{
+               if(!res.ok) throw Error(res.statusText)
+               console.log(res.body);
+               
+               return res.json()
+          })
+          .then(async (data)=>{
+               console.log(data);
+               
+               await getCodes()
+               
+          }).catch((err)=> console.error(err))
      }
 
     useEffect(()=>{
@@ -126,7 +143,7 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
       
 
      return(
-          <CodesContext.Provider value={{codes, getOnePenalCode, selectedCode, createPenalCode, getCodes, deletePenalCode}}>
+          <CodesContext.Provider value={{editPenalCode ,codes, getOnePenalCode, selectedCode, createPenalCode, getCodes, deletePenalCode}}>
                {children}
           </CodesContext.Provider>
      )

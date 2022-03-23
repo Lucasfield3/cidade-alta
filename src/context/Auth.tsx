@@ -30,26 +30,31 @@ type AuthProviderProps = {
      children: ReactNode
 }
 
-export const URL = 'https://my-json-server.typicode.com/cidadealta/exercise'
+export const URL = 'http://localhost:3004'
+
+
 
 let recoveredUser = DEFAULT_CONTEXT_DATA
 
-    await fetch(`${URL}/usuarios`)
+if(localStorage.getItem('user_name')){
+    
+    let userLocal = localStorage.getItem('user_name')
+    console.log(userLocal);
+    
+    await fetch(`${URL}/usuarios?nome=${userLocal}`)
     .then((res)=>{
-        if(!res.ok) throw Error('data missing')
+        if(!res.ok) throw Error(res.statusText)
         return res.json()
     })
-    .then((data:User[])=>{
-
-        data.map((user:User)=>{
-            if(user.id === Number(localStorage.getItem('id'))){
-                recoveredUser = user
-                console.log(recoveredUser)
-            }
-        }) 
-    
+    .then((data:User)=>{
+        recoveredUser = data
+        console.log(data);
+        
     }).catch((err)=> console.error(err))
-    
+        
+}
+
+let userLocal = await JSON.parse(localStorage.getItem('user')) as User
 
 export const AuthContext = createContext({} as AuthContextData)
 
@@ -60,30 +65,22 @@ export const AuthProvider = ({children}: AuthProviderProps) =>{
     const [ loading, setLoading ] = useState(false)
     const navigate = useNavigate()
 
-    console.log(users)
     //onst [ authenticated, setAuthenticated] = useState(false)
 
     const login = async(data:inputs):Promise<User | any>=>{
         setLoading(true)
-       await fetch(`${URL}/usuarios`)
+       await fetch(`${URL}/usuarios?senha=${data.senha}&nome=${data.nome}`)
         .then((res)=>{
-            if(!res.ok) throw Error('data missing')
+            if(!res.ok) throw Error(res.statusText)
             return res.json()
         })
-        .then((usersSend:User[])=>{
-            
-            usersSend.map((user:User)=>{
-                if(user.nome === data.nome && user.senha === data.senha){
-                    setCurrentUser(user)
-                    localStorage.setItem('id', String(user.id))
-                    setTimeout(()=>navigate(`/penal-code`), 200)
-                    setLoading(false)
-                    return currentUser
-                }
-                setLoading(false)
-            })
-            console.log(usersSend);
-            
+        .then((userSend:User)=>{
+            localStorage.setItem('user_name', data.nome)
+            setTimeout(()=>navigate(`/user/codigos-penais`), 200)
+            setLoading(false)
+            console.log(userSend);
+            setCurrentUser(userSend)
+            return currentUser
             
         }).catch((err)=> console.error(err))        
 
@@ -91,10 +88,27 @@ export const AuthProvider = ({children}: AuthProviderProps) =>{
     
 
     const logOut = ()=>{
-        localStorage.removeItem('id')
+        localStorage.removeItem('user')
         setCurrentUser(DEFAULT_CONTEXT_DATA)
         navigate('/')
     }
+
+    // useEffect(()=>{
+    //     const recoverUser = async()=>{
+    //         if(localStorage.getItem('user')){
+        
+    //             let userLocal = await JSON.parse(localStorage.getItem('user')) as User
+    //             console.log(typeof(userLocal));
+    //             if(userLocal){
+    //                 setCurrentUser(currentUser => currentUser = userLocal)
+    //             }
+                    
+    //         }
+    //         console.log(currentUser);
+            
+    //     }
+    //     recoverUser()
+    // }, [])
 
 
      return (

@@ -20,7 +20,11 @@ export const PenalCode = () => {
   
     const [ toggle, setToggle ] = useState(false)
 
-    console.log(codes);
+    // console.log(currentUser);
+
+    useEffect(()=>{
+      getCodes()
+    }, [])
     
 
     return (
@@ -35,7 +39,7 @@ export const PenalCode = () => {
             <ScrollAreaDefault/>
             <AreaAddButton>
               <Title style={{transition:'all .2s ease-in-out'}} itsHovering={toggle}>Adicionar codigo penal</Title>
-              <AddButton onClick={()=> navigate('/penal-code/new-code')} onMouseLeave={()=> setToggle(false)} onMouseEnter={()=> setToggle(true)}>
+              <AddButton onClick={()=> navigate('/novo-codigo')} onMouseLeave={()=> setToggle(false)} onMouseEnter={()=> setToggle(true)}>
                 <img src={plus} alt="adicionar codigo penal" />
               </AddButton>
             </AreaAddButton>

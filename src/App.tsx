@@ -7,7 +7,9 @@ import {
 } from 'react-router-dom'
 import { AuthContext, AuthProvider, DEFAULT_CONTEXT_DATA } from './context/Auth'
 import { CodesProvider } from './context/Codes'
+import { ModalConfirmationProvider } from './context/ModalConfirmation'
 import { CreatePenalCode } from './pages/CreatePenalCode'
+import { EditPenalCode } from './pages/EditPenalCode'
 import { Login, User } from './pages/Login'
 import { PenalCode } from './pages/PenalCode'
 import { ViewPenalCode } from './pages/ViewPenalCode'
@@ -46,12 +48,15 @@ function App() {
     <Router>
       <AuthProvider>
         <CodesProvider>
-          <Routes>
-            <Route element={<Login/>}  path=''></Route>
-            <Route element={<Private><PenalCode/></Private>}  path='/penal-code'></Route>
-            <Route element={<ViewPenalCode/>} path='/penal-code/:id'></Route>
-            <Route element={<CreatePenalCode/>} path='/penal-code/new-code'></Route>
-          </Routes>
+          <ModalConfirmationProvider>
+            <Routes>
+              <Route element={<Login/>}  path='/'></Route>
+              <Route element={<Private><PenalCode/></Private>}  path='/user/codigos-penais'></Route>
+                <Route element={<EditPenalCode/>} path='/edicao-codigo/:id'></Route>
+                <Route element={<ViewPenalCode/>} path='/visualizacao-codigo/:id'></Route>
+                <Route element={<CreatePenalCode/>} path='/novo-codigo'></Route>
+            </Routes>
+          </ModalConfirmationProvider>
         </CodesProvider>
       </AuthProvider>
     </Router>
