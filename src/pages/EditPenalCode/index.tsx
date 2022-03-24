@@ -14,12 +14,13 @@ export const EditPenalCode = () => {
 
     const [ selectedCode, setSelectedCode ] = useState<PenalCode>()
 
-    const { register, handleSubmit, formState:{errors}, reset } = useForm<PenalCode>({defaultValues:{
+    const { register, handleSubmit, reset } = useForm<PenalCode>({
+        defaultValues:{
         nome:'',
         dataCriacao:new Date,
         descricao:'',
         multa:0,
-        status:'Ativo',
+        status:1,
         tempoPrisao:30,
     }})
 
@@ -80,8 +81,8 @@ export const EditPenalCode = () => {
                                 <p>Status</p>
                                 <select  {...register('status')}>
                                     <option>Status</option>
-                                    <option value={'Ativo'}>Ativo</option>
-                                    <option value={'Inativo'}>Inativo</option>
+                                    <option value={1}>Ativo</option>
+                                    <option value={2}>Inativo</option>
                                 </select>
                             </div>
                         </Inputs>

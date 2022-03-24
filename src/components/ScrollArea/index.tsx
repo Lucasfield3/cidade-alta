@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { CodesContext, PenalCode } from "../../context/Codes"
-import { ListCodes, ScrollArea } from "./style"
+import { ListCodes, Pagination, ScrollArea } from "./style"
 import { CustomSvg } from "../CustomSvg"
 import { ModalConfirmation } from "../ModalConfirmation"
 import { ModalConfirmationContext } from "../../context/ModalConfirmation"
@@ -13,7 +13,7 @@ type ScrollAreaProps = {
 
 export const ScrollAreaDefault = ({toggle}: ScrollAreaProps) => {
 
-    const {  codes, getOnePenalCode, deletePenalCode } = useContext(CodesContext)
+    const {  codes, getOnePenalCode, deletePenalCode, getCodesPage, allCodes, getAllCodes } = useContext(CodesContext)
     const { filter, setFilters, field } = useContext(FilterContext)
     const { codeToBeDeleted, handleDeletePenalCode, handleShowModal, isShown } = useContext(ModalConfirmationContext)
     const navigate = useNavigate()
@@ -32,40 +32,72 @@ export const ScrollAreaDefault = ({toggle}: ScrollAreaProps) => {
      let arrayFiltered = [] as PenalCode[]
 
      if(codes.length > 0){
-         arrayFiltered = codes.filter((code)=> {
+         arrayFiltered = allCodes.filter((allCode)=> {
              
              if(field === 'Nome'){
-                console.log(code)
-                return (codes.length > 0) && code.nome.toLowerCase().indexOf(filter.nome.toLowerCase()) !== -1
+
+                return (allCodes.length > 0) && allCode.nome.toLowerCase().indexOf(filter.nome.toLowerCase()) !== -1
              }
 
              if(field === 'Status'){
-                console.log(code)
-                return (codes.length > 0) && code.status.toLowerCase().indexOf(filter.status.toLowerCase()) !== -1
+                return (allCodes.length > 0) && String(allCode.status).toLowerCase().indexOf(filter.status.toLowerCase()) !== -1
              }
 
             if(field === 'Multa'){
-                console.log(code)
-                return (codes.length > 0) && String(code.multa).toLowerCase().indexOf(String(filter.multa).toLowerCase()) !== -1
+                return (allCodes.length > 0) && String(allCode.multa).toLowerCase().indexOf(String(filter.multa).toLowerCase()) !== -1
             }
              
             if(field === 'Data'){
-                console.log(code)
-                return (codes.length > 0) && formatDate(code.dataCriacao).toLowerCase().indexOf(filter.dataCriacao.toLowerCase()) !== -1
+                return (allCodes.length > 0) && formatDate(allCode.dataCriacao).toLowerCase().indexOf(filter.dataCriacao.toLowerCase()) !== -1
             }
 
 
          })
      }
 
-     console.log(arrayFiltered);
-     
+
+    const handleGtePages = ()=>{
+        let getPages = [0]
+        
+        for(const [i, value] of allCodes.entries()){
+           let pages = (allCodes.length/5)
+           if(pages % 1 !==0){
+               pages = Math.trunc(pages) + 1
+          }
+           
+           if(i <= pages -1 ){
+            getPages.push(value.id)
+            }
+
+       }    
+
+      return getPages.map((key, index)=>{
+       if(index > 0 ){
+           return (
+               <p onClick={()=>getCodesPage(index)}>{index}</p>
+           )
+
+          }
+            
+       })
+       
+    }
 
      useEffect(()=>{
         setFilters()
+        getAllCodes()
+        if(allCodes.length > 0){
+            handleGtePages()
+        }
      },[])
-        
 
+     useEffect(()=>{
+        getAllCodes()
+        if(allCodes.length > 0){
+            handleGtePages()
+        }
+     }, [codes])
+        
 
   return (
       <>
@@ -76,42 +108,42 @@ export const ScrollAreaDefault = ({toggle}: ScrollAreaProps) => {
                 handleShowModal()
             }}
             onDisMiss={()=> handleShowModal()}
-            />
+        />
         <ScrollArea>
         
             <ListCodes>
-                {toggle ? arrayFiltered.map((code, index) => {
+                {toggle ? arrayFiltered.map((allCode, index) => {
                     return (
                         <>
                         <div style={{display:"flex", justifyContent:'space-between'}} key={index + 1}>
                             <p onClick={()=> {
-                                getOnePenalCode(code.id)
-                                navigate(`/visualizacao-codigo/${code.id}`)
+                                getOnePenalCode(allCode.id)
+                                navigate(`/visualizacao-codigo/${allCode.id}`)
                                 }} key={index} >
-                                {code.nome}
+                                {allCode.nome}
                             </p>
                             <div>
-                                <p onClick={()=>navigate(`/edicao-codigo/${code.id}`)}>editar</p>
-                                <button title="deletar" onClick={()=>handleDeletePenalCode(code.id)}><CustomSvg/></button>
+                                <p onClick={()=>navigate(`/edicao-codigo/${allCode.id}`)}>editar</p>
+                                <button title="deletar" onClick={()=>handleDeletePenalCode(allCode.id)}><CustomSvg/></button>
                             </div>
                         </div>
                         
                         </>
                     )
                 }) : 
-                codes.map((code, index) => {
+                codes.map((allCode, index) => {
                     return (
                         <>
                         <div style={{display:"flex", justifyContent:'space-between'}} key={index + 1}>
                             <p onClick={()=> {
-                                getOnePenalCode(code.id)
-                                navigate(`/visualizacao-codigo/${code.id}`)
+                                getOnePenalCode(allCode.id)
+                                navigate(`/visualizacao-codigo/${allCode.id}`)
                                 }} key={index} >
-                                {code.nome}
+                                {allCode.nome}
                             </p>
                             <div>
-                                <p onClick={()=>navigate(`/edicao-codigo/${code.id}`)}>editar</p>
-                                <button title="deletar" onClick={()=>handleDeletePenalCode(code.id)}><CustomSvg/></button>
+                                <p onClick={()=>navigate(`/edicao-codigo/${allCode.id}`)}>editar</p>
+                                <button title="deletar" onClick={()=>handleDeletePenalCode(allCode.id)}><CustomSvg/></button>
                             </div>
                         </div>
                         
@@ -119,10 +151,12 @@ export const ScrollAreaDefault = ({toggle}: ScrollAreaProps) => {
                     )
                 })
                 }
-                {codes.length === 0 && <h1>vazio</h1>}
+                {allCodes.length === 0 && <h1>vazio</h1>}
             </ListCodes>
-            </ScrollArea>
-          
+        </ScrollArea>
+        <Pagination>
+            {codes.length > 0 ? handleGtePages() : <h1>Loading...</h1>}
+        </Pagination>
       </>
   )
 }

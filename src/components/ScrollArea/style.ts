@@ -41,7 +41,34 @@ export const ScrollArea = styled.div`
     
     }
 
+
    
+`
+
+export const Pagination = styled.div`
+
+
+    display: flex;
+    width: 53rem;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+
+    p{
+        width: 2.2rem;
+        text-align: center;
+        color: #6243ac;
+        border-radius: 0.5rem;
+        border: 2px #6243ac solid;
+        transition:allCodes .2s ease-in-out;
+        cursor: pointer;
+        background: white;
+
+        &:hover{
+            color:white;
+            background:${COLORS.STRONG_PURPLE} ;
+        }
+    }   
 `
 
 export const ListCodes = styled.div`

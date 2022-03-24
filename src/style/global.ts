@@ -5,14 +5,8 @@ export default createGlobalStyle`
         * {
             @import url('/global.css');
             font-family: Roboto !important;
-            // CSS you want global. 
         }
 `
-
-// export const PageDefault = styled.div`
-//     display:flex;
-
-// `
 interface ButtonProps{
     color?:string;
     background?:string;

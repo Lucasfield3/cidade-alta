@@ -12,7 +12,7 @@ export const CreatePenalCode = () => {
 
     const { createPenalCode } = useContext(CodesContext)
 
-    const { register, handleSubmit, formState:{errors}, getValues } = useForm<PenalCode>()
+    const { register, handleSubmit} = useForm<PenalCode>()
     const navigate = useNavigate()
 
     const onSubmit:SubmitHandler<PenalCode> = async(data:PenalCode)=>{
@@ -33,28 +33,28 @@ export const CreatePenalCode = () => {
                     <Inputs>
                         <div>
                             <p>Nome</p>
-                            <input type="text" placeholder="digite o nome do codigo penal" {...register('nome', )} />
+                            <input type="text" placeholder="digite o nome do codigo penal" {...register('nome', {required:true})} />
                         </div>
                         <div>
                             <p>Multa</p>
-                            <input type="number" step={'any'} placeholder="digite a multa" {...register('multa', )} />
+                            <input type="number" step={'any'} placeholder="digite a multa" {...register('multa', {required:true})} />
                         </div>
                         <div>
                             <p>Tempo de prisão</p>
-                            <input type="number"  placeholder="digite o tempo de prisão" {...register('tempoPrisao', )} />
+                            <input type="number"  placeholder="digite o tempo de prisão" {...register('tempoPrisao', {required:true})} />
                         </div>
                         <div>
                             <p>Status</p>
                             <select  {...register('status', {required:true})}>
                                 <option>Status</option>
-                                <option value={'Ativo'}>Ativo</option>
-                                <option value={'Inativo'}>Inativo</option>
+                                <option value={1}>Ativo</option>
+                                <option value={2}>Inativo</option>
                             </select>
                         </div>
                     </Inputs>
                     <div>
                         <p>Descrição</p>
-                        <textarea placeholder="digite a descrição do código penal" {...register('descricao', )} cols={30} rows={10}></textarea>
+                        <textarea placeholder="digite a descrição do código penal" {...register('descricao', {required:true})} cols={30} rows={10}></textarea>
                     </div>
                     <Button height='3rem' width='6rem'type='submit'>Criar</Button> 
                 </form>

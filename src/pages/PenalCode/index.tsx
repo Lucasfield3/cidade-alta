@@ -13,7 +13,7 @@ import { FilterContext } from "../../context/Filter";
 export const PenalCode = () => {
 
     const { logOut, loading } = useContext(AuthContext)
-    const { getCodes } = useContext(CodesContext)
+    const { getCodes,  getAllCodes} = useContext(CodesContext)
     const { handleApply, apply } = useContext(FilterContext)
 
     const navigate = useNavigate()
@@ -22,6 +22,7 @@ export const PenalCode = () => {
 
     useEffect(()=>{
       getCodes()
+      getAllCodes()
     }, [])
 
     return (
@@ -30,18 +31,17 @@ export const PenalCode = () => {
        <PageDefault>
          <Header>
            <span></span>
-            <h1 style={{justifySelf:'center'}}>Codigos Penais</h1>
+            <h1 style={{justifySelf:'center'}}>Códigos Penais</h1>
             <Button height='3rem' width='5rem' borderRadius='17px' style={{justifySelf:'flex-end', marginRight:'2.5rem'}} onClick={logOut}>Sair</Button>
          </Header>
             <FilterArea onClickAll={()=>{
-                  
                 handleApply(false)
               }} onClickApply={()=> handleApply(true)}/>
             <ScrollAreaDefault toggle={apply}/>
             <AreaAddButton>
-              <Title style={{transition:'all .2s ease-in-out'}} itsHovering={toggle}>Adicionar codigo penal</Title>
+              <Title style={{transition:'all .2s ease-in-out'}} itsHovering={toggle}>Adicionar código penal</Title>
               <AddButton onClick={()=> navigate('/novo-codigo')} onMouseLeave={()=> setToggle(false)} onMouseEnter={()=> setToggle(true)}>
-                <img src={plus} alt="adicionar codigo penal" />
+                <img src={plus} alt="adicionar código penal" />
               </AddButton>
             </AreaAddButton>
         </PageDefault>}

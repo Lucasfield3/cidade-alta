@@ -26,6 +26,24 @@
       "multa": 0,
       "tempoPrisao": 90,
       "status": 2
+    },
+    {
+      "id": 4,
+      "nome": "Desacato",
+      "descricao": "Desacato, desobediência ou desrespeito perante um tribunal ou oficiais da policia na forma de comportamento que se opõe ou desafia a autoridade, a justiça e a dignidade do tribunal. Um réu só pode ser cobrado uma vez por desacato",
+      "dataCriacao": "2021-04-29T01:26:35.700Z",
+      "multa": 501.2,
+      "tempoPrisao": 30,
+      "status": 1
+    },
+    {
+      "nome": "novo código penal",
+      "descricao": "descrição",
+      "dataCriacao": "2022-03-24T23:09:22.485Z",
+      "multa": "100",
+      "tempoPrisao": "20",
+      "status": "2",
+      "id": 27
     }
   ],
   "status": [

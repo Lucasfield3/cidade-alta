@@ -13,6 +13,7 @@ export const ViewPenalCode = () => {
  
     useEffect(()=>{
         getOnePenalCode(Number(id))
+
     }, [])
 
     const formatDate = (value:Date)=>{
@@ -42,7 +43,7 @@ export const ViewPenalCode = () => {
                     <p><strong>Descrição: </strong>{selectedCode.descricao}</p>
                     <p><strong>Multa: </strong>{`R$${parseFloat(selectedCode.multa.toString()).toFixed(2)}`}</p>
                     <p><strong>Tempo de prisão: </strong>{selectedCode.tempoPrisao}</p>
-                    <p><strong>Status: </strong>{selectedCode.status}</p>
+                    <p><strong>Status: </strong>{String(selectedCode.status) === "1" ? 'Ativo' : 'Inativo'}</p>
                 </main> : <h1>Loading...</h1>}
         </ContainerView>
     );

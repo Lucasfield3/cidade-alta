@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { FilterContext } from "../../context/Filter";
 import { Button } from "../../style/global";
 import { Fields, FilterContainer } from "./styles";
@@ -41,14 +41,14 @@ export const FilterArea = ({onClickApply, onClickAll}: FilterAreaProps) => {
                         <p>Status</p>
                         <select onChange={setFilters}  placeholder="status" id="status">
                         <option>Status</option>
-                            <option value="Ativo">Ativo</option>
-                            <option value="Inativo">Inativo</option>
+                            <option value="1">Ativo</option>
+                            <option value="2">Inativo</option>
                         </select>
                     </Fields>
             </FilterContainer>
             <div style={{margin:'0.5rem', display:'flex', gap:'10rem'}}>
                 <Button onClick={onClickApply} height='2.6rem' width='9rem'>Aplicar</Button>
-                <Button onClick={onClickAll}  height='2.6rem' width='9rem'>Todos</Button>
+                <Button onClick={onClickAll}  height='2.6rem' width='9rem'>Voltar</Button>
             </div>
         </>
     );

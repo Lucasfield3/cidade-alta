@@ -1,6 +1,4 @@
 import { createContext, ReactNode, useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom';
-
 
 export interface PenalCode {
     id:number;
@@ -9,18 +7,22 @@ export interface PenalCode {
     dataCriacao:Date;
     multa:number;
     tempoPrisao:number;
-    status:'Ativo'| 'Inativo';
+    status:number;
+
 }
 
 
 type CodesContextData = {
     codes:PenalCode[],
+    allCodes:PenalCode[],
     selectedCode:PenalCode;
     getOnePenalCode:(id:number)=>Promise<PenalCode | any>;
     createPenalCode:(data:PenalCode)=>Promise<PenalCode | any>;
     getCodes:()=>Promise<PenalCode[] | any>;
     deletePenalCode:(id:number)=>Promise<PenalCode | any>;
-    editPenalCode:(data:PenalCode, id:number)=>Promise<PenalCode | any>
+    editPenalCode:(data:PenalCode, id:number)=>Promise<PenalCode | any>;
+    getCodesPage:(page:number)=>Promise<PenalCode[] | any>;
+    getAllCodes:()=>Promise<PenalCode[] | any>
 }
 
 type CodesProviderProps = {
@@ -32,11 +34,11 @@ export const CodesContext = createContext({} as CodesContextData)
 export const CodesProvider = ({children}: CodesProviderProps) =>{
 
     const [ codes, setCodes ] = useState<PenalCode[]>([])
-
+    const [ allCodes, setAllCodes ] = useState<PenalCode[]>([])
     const [ selectedCode, setSelectedCode ] = useState<PenalCode>()
 
     const getCodes = async()=>{
-         await fetch(`http://localhost:3004/codigopenal`)
+         await fetch(`http://localhost:3004/codigopenal?_page=1&_limit=5`)
         .then((res)=>{
           if(!res.ok) throw Error(res.statusText)
            return res.json()
@@ -46,6 +48,30 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
                setCodes(data)
         }).catch((err)=> console.error(err))
     }
+
+    const getAllCodes = async()=>{
+     await fetch(`http://localhost:3004/codigopenal`)
+    .then((res)=>{
+      if(!res.ok) throw Error(res.statusText)
+       return res.json()
+    })
+    .then((data:PenalCode[])=>{
+         console.log(data);
+           setAllCodes(data)
+    }).catch((err)=> console.error(err))
+}
+
+    const getCodesPage = async(page:number)=>{
+     await fetch(`http://localhost:3004/codigopenal?_page=${page}&_limit=5`)
+    .then((res)=>{
+      if(!res.ok) throw Error(res.statusText)
+       return res.json()
+    })
+    .then((data:PenalCode[])=>{
+           console.log(data)
+           setCodes(data)
+    }).catch((err)=> console.error(err))
+}
 
     const getOnePenalCode = async (id:number)=> {
           await fetch(`http://localhost:3004/codigopenal/${id}`)
@@ -128,12 +154,24 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
      }
 
     useEffect(()=>{
-          getCodes()
+          getAllCodes()
+          console.log(allCodes);
+          
      },[])
       
 
      return(
-          <CodesContext.Provider value={{editPenalCode ,codes, getOnePenalCode, selectedCode, createPenalCode, getCodes, deletePenalCode}}>
+          <CodesContext.Provider value={{
+          getAllCodes, 
+          allCodes, 
+          getCodesPage,
+          editPenalCode,
+          codes, 
+          getOnePenalCode, 
+          selectedCode, 
+          createPenalCode, 
+          getCodes, 
+          deletePenalCode}}>
                {children}
           </CodesContext.Provider>
      )
