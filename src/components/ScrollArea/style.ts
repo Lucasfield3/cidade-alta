@@ -6,7 +6,7 @@ export const ScrollArea = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 0.5rem 1rem;
+    padding: 1rem 1rem;
     height: 19.5rem;
     width: 53rem;
     border-radius: 0.5rem;
@@ -15,6 +15,17 @@ export const ScrollArea = styled.div`
 
     >div{
         overflow-y:auto;
+        &::-webkit-scrollbar{
+            width:0.5rem;
+        }
+        &::-webkit-scrollbar-track{
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb{
+            background-color: ${COLORS.PURPLE};
+
+        }
     }
 
     >input{

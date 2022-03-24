@@ -1,9 +1,6 @@
-import { createContext, useContext, ReactNode, useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { createContext, ReactNode, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 import { User } from '../pages/Login'
-import { api } from '../services/api'
-import { hash } from 'bcryptjs'
-import { sign } from 'jsonwebtoken';
 
 export let DEFAULT_CONTEXT_DATA = {
     id:0,
@@ -32,9 +29,7 @@ type AuthProviderProps = {
 
 export const URL = 'http://localhost:3004'
 
-
-
-let recoveredUser = DEFAULT_CONTEXT_DATA
+let recoveredUser:null | User
 
 if(localStorage.getItem('user_name')){
     
@@ -54,7 +49,6 @@ if(localStorage.getItem('user_name')){
         
 }
 
-let userLocal = await JSON.parse(localStorage.getItem('user')) as User
 
 export const AuthContext = createContext({} as AuthContextData)
 
@@ -63,56 +57,64 @@ export const AuthProvider = ({children}: AuthProviderProps) =>{
     const [ currentUser, setCurrentUser ] = useState<User>(recoveredUser)
     const [ users, setUsers ] =  useState([])
     const [ loading, setLoading ] = useState(false)
+
     const navigate = useNavigate()
 
-    //onst [ authenticated, setAuthenticated] = useState(false)
-
-    const login = async(data:inputs):Promise<User | any>=>{
-        setLoading(true)
-       await fetch(`${URL}/usuarios?senha=${data.senha}&nome=${data.nome}`)
+    const getUsers = async():Promise<User | any>=>{
+       await fetch(`${URL}/usuarios`)
         .then((res)=>{
             if(!res.ok) throw Error(res.statusText)
             return res.json()
         })
-        .then((userSend:User)=>{
-            localStorage.setItem('user_name', data.nome)
-            setTimeout(()=>navigate(`/user/codigos-penais`), 200)
-            setLoading(false)
-            console.log(userSend);
-            setCurrentUser(userSend)
-            return currentUser
-            
+        .then((usersSend:User[])=>{
+            setUsers(usersSend)
         }).catch((err)=> console.error(err))        
 
     }
     
 
+    const login = async(data:inputs):Promise<User | any>=>{
+       
+        setLoading(true)
+         await fetch(`${URL}/usuarios?senha=${data.senha}&nome=${data.nome}`)
+         .then((res)=>{
+             if(!res.ok) throw Error(res.statusText)
+             return res.json()
+         })
+         .then((usersSend:User[])=>{
+            setCurrentUser(usersSend[0] ? usersSend[0]  : DEFAULT_CONTEXT_DATA)
+             localStorage.setItem('user_name', data.nome)
+             console.log(usersSend[0]); 
+             setLoading(false)
+             if(usersSend[0]){
+                setTimeout(()=>navigate('/user/codigos-penais'), 200)
+             }
+             return usersSend[0]  
+         
+         }).catch((err)=> console.error(err))
+        
+
+    }
+    
+
     const logOut = ()=>{
-        localStorage.removeItem('user')
+        localStorage.removeItem('user_name')
         setCurrentUser(DEFAULT_CONTEXT_DATA)
         navigate('/')
     }
 
-    // useEffect(()=>{
-    //     const recoverUser = async()=>{
-    //         if(localStorage.getItem('user')){
-        
-    //             let userLocal = await JSON.parse(localStorage.getItem('user')) as User
-    //             console.log(typeof(userLocal));
-    //             if(userLocal){
-    //                 setCurrentUser(currentUser => currentUser = userLocal)
-    //             }
-                    
-    //         }
-    //         console.log(currentUser);
-            
-    //     }
-    //     recoverUser()
-    // }, [])
-
+    useEffect(()=>{
+        getUsers()
+    }, [])
 
      return (
-         <AuthContext.Provider value={{loading, users ,currentUser, login, logOut, authenticated: currentUser === DEFAULT_CONTEXT_DATA ? false : true }}>
+         <AuthContext.Provider value={{
+             loading, 
+             users,
+             currentUser, 
+             login, 
+             logOut, 
+             authenticated:(currentUser !== DEFAULT_CONTEXT_DATA ) ? true : false}}>
              {children}
          </AuthContext.Provider>
      )

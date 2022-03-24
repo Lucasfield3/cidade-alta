@@ -22,23 +22,36 @@ interface ButtonProps{
 }
 
 export const PageDefault = styled.div`
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh !important;
+    min-height: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
-    height:100vh;
+    align-items: center;
+    position: relative;
 
-    header{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        width: 100%;
-
-    }
 
     h1{
         color: ${COLORS.BLACK};
         margin-bottom: 5rem;
         font-weight: 500;
+        justify-self: center;
+    }
+
+    textarea {
+        &::-webkit-scrollbar{
+            width:0.5rem;
+        }
+        &::-webkit-scrollbar-track{
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb{
+            background-color: ${COLORS.PURPLE};
+
+        }
     }
 `
 
@@ -55,5 +68,33 @@ export const Button = styled.button<ButtonProps>`
     
     &:hover{
         background:${COLORS.PURPLE};
+    }
+`
+
+
+export const BackButton = styled.button`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 4rem;
+    height: 4rem;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem;
+    cursor: pointer;
+    box-shadow: 1px 2px 5px 1px rgb(0 0 0 / 25%);
+    padding: 0.6rem;
+
+    img{
+        width: -webkit-fill-available;
+    }
+
+    &:active{
+        width: 4.5rem;
+        height: 4.5rem;
     }
 `

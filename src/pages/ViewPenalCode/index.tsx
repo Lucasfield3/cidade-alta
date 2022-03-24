@@ -1,15 +1,12 @@
 import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { CodesContext } from "../../context/Codes";
-import { PageDefault } from "../../style/global";
+import { BackButton } from "../../style/global";
 import { ContainerView } from "./style";
 import arrow from '../../images/arrow.svg'
 
 
-type Props = {
-    
-};
-export const ViewPenalCode = (props: Props) => {
+export const ViewPenalCode = () => {
     const { selectedCode, getOnePenalCode } = useContext(CodesContext)
     const { id } = useParams()
     const navigate = useNavigate()
@@ -28,15 +25,13 @@ export const ViewPenalCode = (props: Props) => {
         return day+"/"+month+"/"+year
         
      }
-
      
      
     return (
         <ContainerView>
+                <BackButton  onClick={()=> navigate('/user/codigos-penais')}><img src={arrow} alt="voltar" /></BackButton>
                 <header>
-                    <button onClick={()=> navigate('/user/codigos-penais')}><img src={arrow} alt="voltar" /></button>
                     <h1>Código Penal</h1>
-                    <span></span>
                 </header>
                {selectedCode ? 
                <main>
@@ -47,7 +42,7 @@ export const ViewPenalCode = (props: Props) => {
                     <p><strong>Descrição: </strong>{selectedCode.descricao}</p>
                     <p><strong>Multa: </strong>{`R$${parseFloat(selectedCode.multa.toString()).toFixed(2)}`}</p>
                     <p><strong>Tempo de prisão: </strong>{selectedCode.tempoPrisao}</p>
-                    <p><strong>Status: </strong>{selectedCode.status.id === 1 ? 'Ativo' : 'Inativo'}</p>
+                    <p><strong>Status: </strong>{selectedCode.status}</p>
                 </main> : <h1>Loading...</h1>}
         </ContainerView>
     );

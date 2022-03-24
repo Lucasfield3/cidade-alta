@@ -13,6 +13,13 @@ export const AreaAddButton = styled.div`
     align-items: center;
 
 `
+export const Header = styled.header`
+    display:grid ;
+    grid-template-columns: 1fr 1fr 1fr;
+    width:100%;
+
+`
+
 
 
 export const AddButton = styled.button`

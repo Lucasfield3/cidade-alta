@@ -1,11 +1,5 @@
 
-
-// @flow 
-import * as React from 'react';
-type Props = {
-    color:string;
-};
-export const CustomSvg = (props: Props) => {
+export const CustomSvg = () => {
     return (
         <>
             <svg width="21" height="25" viewBox="0 0 21 25" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -1,11 +1,7 @@
-import { sign } from 'jsonwebtoken';
 import { useContext } from 'react';
-import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import {  useState } from 'react';
+import {  useForm } from 'react-hook-form';
 import { AuthContext } from '../../context/Auth';
-import { CodesContext } from '../../context/Codes';
-import { api } from '../../services/api';
 import { Button, PageDefault } from '../../style/global';
 import { Form } from './styled';
 
@@ -24,8 +20,7 @@ export const Login = () => {
 
     const [errorMsg, setErrorMsg] = useState('')
     const { register, handleSubmit, formState:{errors} } = useForm()
-    const { login, authenticated } = useContext(AuthContext)
-    const { getCodes} = useContext(CodesContext)
+    const { login } = useContext(AuthContext)
 
     const errorMsgNome = errors.nome?.type === 'required' ? 'Nome inválido' : 'digite seu nome'
     const errorMsgPassword = errors.senha?.type === 'required' ? 'Senha inválida' : 'digite sua senha'
@@ -33,19 +28,14 @@ export const Login = () => {
    
 
     const onSubmit = async (data:Inputs) => {
-
-    
-        const user = await login(data)
-        console.log(user)
+        const user = await login(data) as User
         if(user){
             setErrorMsg('')
         }else{
-            setErrorMsg('Usuário não existe')
+            setTimeout(()=>setErrorMsg('Usuário não existe'), 200)
         }
-       
     }
 
-    
     return (
         <PageDefault>
             <h1>Login</h1>

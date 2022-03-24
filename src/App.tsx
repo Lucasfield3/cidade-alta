@@ -7,6 +7,7 @@ import {
 } from 'react-router-dom'
 import { AuthContext, AuthProvider, DEFAULT_CONTEXT_DATA } from './context/Auth'
 import { CodesProvider } from './context/Codes'
+import { FilterProvider } from './context/Filter'
 import { ModalConfirmationProvider } from './context/ModalConfirmation'
 import { CreatePenalCode } from './pages/CreatePenalCode'
 import { EditPenalCode } from './pages/EditPenalCode'
@@ -49,13 +50,15 @@ function App() {
       <AuthProvider>
         <CodesProvider>
           <ModalConfirmationProvider>
-            <Routes>
-              <Route element={<Login/>}  path='/'></Route>
-              <Route element={<Private><PenalCode/></Private>}  path='/user/codigos-penais'></Route>
-                <Route element={<EditPenalCode/>} path='/edicao-codigo/:id'></Route>
-                <Route element={<ViewPenalCode/>} path='/visualizacao-codigo/:id'></Route>
-                <Route element={<CreatePenalCode/>} path='/novo-codigo'></Route>
-            </Routes>
+            <FilterProvider>
+              <Routes>
+                  <Route element={<Login/>}  path='/'></Route>
+                  <Route element={<Private><PenalCode/></Private>}  path='/user/codigos-penais'></Route>
+                  <Route element={<EditPenalCode/>} path='/edicao-codigo/:id'></Route>
+                  <Route element={<ViewPenalCode/>} path='/visualizacao-codigo/:id'></Route>
+                  <Route element={<CreatePenalCode/>} path='/novo-codigo'></Route>
+              </Routes>
+            </FilterProvider>
           </ModalConfirmationProvider>
         </CodesProvider>
       </AuthProvider>

@@ -2,8 +2,9 @@ import { useContext, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { CodesContext, PenalCode } from "../../context/Codes";
-import { Container } from "../CreatePenalCode/style";
-
+import { BackButton, Button, PageDefault } from "../../style/global";
+import { ContainerInputs, Inputs } from "../CreatePenalCode/style";
+import arrow from '../../images/arrow.svg'
 
 
 
@@ -13,12 +14,12 @@ export const EditPenalCode = () => {
 
     const [ selectedCode, setSelectedCode ] = useState<PenalCode>()
 
-    const { register, handleSubmit, formState:{errors}, getValues, reset } = useForm<PenalCode>({defaultValues:{
+    const { register, handleSubmit, formState:{errors}, reset } = useForm<PenalCode>({defaultValues:{
         nome:'',
         dataCriacao:new Date,
         descricao:'',
         multa:0,
-        status:{id:1, descricao:'Ativo'},
+        status:'Ativo',
         tempoPrisao:30,
     }})
 
@@ -27,14 +28,13 @@ export const EditPenalCode = () => {
     const { id } = useParams()
 
     const onSubmit:SubmitHandler<PenalCode> = async(data:PenalCode)=>{
-        await editPenalCode(data, id)
-        console.log(data);
-        console.log(typeof(getValues('multa')));
-        setTimeout(()=>navigate('/user/codigos-penais'), 200)
-        
+        await editPenalCode(data, selectedCode.id)
+        .then(()=>{
+            setTimeout(()=>navigate('/user/codigos-penais'), 200)
+        })
+      
     }
 
-    console.log(selectedCode);
     
 
     useEffect(()=>{
@@ -45,32 +45,55 @@ export const EditPenalCode = () => {
             return res.json()
             })
             .then((data:PenalCode)=>{
-                 console.log(data);
-                 setSelectedCode(prevState => {return {...prevState, ...data}})
-                 reset(data)
+                 setSelectedCode(data)
+                reset(data)
             }).catch((err)=> console.error(err))
        }
        getOnePenalCode()
     }, [reset])
 
     return (
-        <Container>
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <PageDefault>
+                <BackButton onClick={()=> navigate('/user/codigos-penais')}><img src={arrow} alt="voltar" /></BackButton>
+            <header>
+                <h1>Tela de edição</h1>
+            </header>
+            <ContainerInputs>
 
-                {selectedCode ? 
-                    <>
-                        <input type="text" placeholder="nome" {...register('nome', )} />
-                        <input type="text" placeholder="descricao" {...register('descricao', )} />
-                        <input type="number" placeholder="multa" {...register('multa', )} />
-                        <input type="number"  placeholder="tempoPrisao" {...register('tempoPrisao', )} />
-                        <select value={selectedCode.status.id} {...register('status', )}>
-                            <option value={1}>Ativo</option>
-                            <option value={2}>Inativo</option>
-                        </select>
-                        <button type='submit'>Editar</button> 
-                    </>
-                : <h1>Loading...</h1>}
-            </form>
-        </Container>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    {selectedCode ? 
+                        <>
+                        <Inputs>
+                            <div>
+                                <p>Nome</p>
+                                <input type="text" placeholder="digite o nome do codigo penal" {...register('nome' )} />
+                            </div>
+                            <div>
+                                <p>Multa</p>
+                                <input type="number" placeholder="digite a multa" {...register('multa' )} />
+                            </div>
+                            <div>
+                                <p>Tempo de prisão</p>
+                                <input type="number"  placeholder="digite o tempo de prisão" {...register('tempoPrisao')} />
+                            </div>
+                            <div>
+                                <p>Status</p>
+                                <select  {...register('status')}>
+                                    <option>Status</option>
+                                    <option value={'Ativo'}>Ativo</option>
+                                    <option value={'Inativo'}>Inativo</option>
+                                </select>
+                            </div>
+                        </Inputs>
+                        <div>
+                            <p>Descrição</p>
+                            <textarea placeholder="digite a descrição do código penal" {...register('descricao')}></textarea>
+                        </div>
+                        <Button height='3rem' width='6rem' type='submit'>Editar</Button> 
+                        </>
+                    : <h1>Loading...</h1>}
+                </form>
+            </ContainerInputs>
+        </PageDefault>
     );
 };

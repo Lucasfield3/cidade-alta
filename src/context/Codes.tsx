@@ -1,11 +1,6 @@
-import { createContext, useContext, ReactNode, useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
-import { api } from '../services/api'
+import { createContext, ReactNode, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 
-export interface Status{
-     id:number;
-     descricao:"Ativo" | "Inativo"
-}
 
 export interface PenalCode {
     id:number;
@@ -14,7 +9,7 @@ export interface PenalCode {
     dataCriacao:Date;
     multa:number;
     tempoPrisao:number;
-    status:Status;
+    status:'Ativo'| 'Inativo';
 }
 
 
@@ -25,7 +20,7 @@ type CodesContextData = {
     createPenalCode:(data:PenalCode)=>Promise<PenalCode | any>;
     getCodes:()=>Promise<PenalCode[] | any>;
     deletePenalCode:(id:number)=>Promise<PenalCode | any>;
-    editPenalCode:(data:PenalCode, id:string)=>Promise<PenalCode | any>
+    editPenalCode:(data:PenalCode, id:number)=>Promise<PenalCode | any>
 }
 
 type CodesProviderProps = {
@@ -39,9 +34,6 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
     const [ codes, setCodes ] = useState<PenalCode[]>([])
 
     const [ selectedCode, setSelectedCode ] = useState<PenalCode>()
-
-    const navigate = useNavigate()
-    
 
     const getCodes = async()=>{
          await fetch(`http://localhost:3004/codigopenal`)
@@ -108,7 +100,7 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
           })
      }
 
-     const editPenalCode = async(data:PenalCode, id:string)=>{
+     const editPenalCode = async(data:PenalCode, id:number)=>{
           await fetch(`http://localhost:3004/codigopenal/${id}`, {
                method:'PUT',
                headers: { 
@@ -125,8 +117,6 @@ export const CodesProvider = ({children}: CodesProviderProps) =>{
                })
           }).then((res)=>{
                if(!res.ok) throw Error(res.statusText)
-               console.log(res.body);
-               
                return res.json()
           })
           .then(async (data)=>{
