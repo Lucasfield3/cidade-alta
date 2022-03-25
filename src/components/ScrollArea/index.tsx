@@ -13,7 +13,7 @@ type ScrollAreaProps = {
 
 export const ScrollAreaDefault = ({toggle}: ScrollAreaProps) => {
 
-    const {  codes, getOnePenalCode, deletePenalCode, getCodesPage, allCodes, getAllCodes } = useContext(CodesContext)
+    const {  codes, getOnePenalCode, deletePenalCode, getCodesPage, allCodes, getAllCodes, getCodes } = useContext(CodesContext)
     const { filter, setFilters, field } = useContext(FilterContext)
     const { codeToBeDeleted, handleDeletePenalCode, handleShowModal, isShown } = useContext(ModalConfirmationContext)
     const navigate = useNavigate()
@@ -84,6 +84,7 @@ export const ScrollAreaDefault = ({toggle}: ScrollAreaProps) => {
     }
 
      useEffect(()=>{
+         getCodes()
         setFilters()
         getAllCodes()
         if(allCodes.length > 0){
