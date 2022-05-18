@@ -1,6 +1,6 @@
 # Exercício departamento de polícia (Cidade-alta)
 
-Web app de simulação de um sistema de códigos penais, com sistema de filtro para pesquisa, com controle de rotas.<br><br>
+Web app de simulação de um sistema de códigos penais, com filtro para pesquisa e controle de rotas.<br><br>
 Obs: usei o comando <strong>json-server https://my-json-server.typicode.com/cidadealta/exercise/db --port 3004</strong><br>
 para usar outros métodos além do GET.
 
